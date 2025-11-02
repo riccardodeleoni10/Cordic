@@ -57,14 +57,14 @@ begin
             xy_iter <= (others => '0');
     end case;
 end process Logic_unit_1;
-xy_out <= xy_iter;
+xy_out <= xy_iter;                                                             --xy_out assignment
 Logic_unit_2: process(shift_value, xy_reg)
     variable shift_value_tmp_int : integer range 0 to 8;
     variable xy_reg_tmp          : signed(15 downto 0);
 begin
     shift_value_tmp_int := to_integer(unsigned(shift_value));
     xy_reg_tmp := signed(xy_reg);
-    shifted <= std_logic_vector(shift_right(xy_reg_tmp, shift_value_tmp_int));
+    shifted <= std_logic_vector(shift_right(xy_reg_tmp, shift_value_tmp_int)); --shifted assignment
 end process;
 end Behavioral_Iterative;
 
