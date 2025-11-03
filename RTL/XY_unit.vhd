@@ -1,11 +1,20 @@
--- Corretto: XY_Unit.vhd
-----------------------------------------------------------------------------------
 -- Company: 
 -- Engineer: Riccardo De Leoni
 -- 
--- Create Date: 31.10.2025
--- Module Name: XY_Unit - Behavioral
-----------------------------------------------------------------------------------
+-- Create Date: 02.11.2025 21:12:13
+-- Design Name: 
+-- Module Name: XY_Unit - Behavioral_Iterative
+-- Project Name: Cordic
+-- Target Devices: 
+-- Tool Versions: 2023.2
+-- Description: Hardware to compute iteration for X(or Y) coordinate
+-- 
+-- Dependencies: 
+-- 
+-- Revision:
+-- Revision 0.01 - File Created
+-- Additional Comments:
+-- 
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
