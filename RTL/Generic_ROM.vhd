@@ -26,6 +26,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 -- arithmetic functions with Signed or Unsigned values
 use IEEE.NUMERIC_STD.ALL;
 use ieee.std_logic_unsigned.all;
+use std.textio.all;
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
 --library UNISIM;
@@ -36,9 +37,11 @@ entity generic_ROM is
       generic (
         DATA_WIDTH: integer := 16;
         ROM_SIZE  : integer := 16;
-        FILE_PATH : string  := "rom_init.txt";
+        ROM_FILE : string   := "data.txt"; -- give the complete path, read REMIND down below;
         USE_OFFSET: string  := "no" --or yes
       );
+--REMIND : if the file.txt isn't in the same directory of the project and if you don't give the complete path,
+--          is it possible to have scope issues and it won't be possible to read the file
       Port ( 
         clk,enable,reset: in std_logic;
         load            : in std_logic;
@@ -50,7 +53,22 @@ end generic_ROM;
 -- The ROM self increment the addr_start, is it possible to set an offset to specify when the addresse must restart,
 -- if you want to use the entire ROM modify the generic;
 architecture Behavioral of generic_ROM is
-    signal ROM           : memory_array(0 to ROM_SIZE-1)(DATA_WIDTH-1 downto 0);
+--Function to read a file and fill the ROM
+    impure function init_ROM(init_File: string) return memory_array is
+            file romFile         : text open read_mode is init_FILE;
+            variable romFileLine : line;
+            variable rom         : memory_array(0 to ROM_SIZE-1)(DATA_WIDTH-1 downto 0);
+            variable temp        : bit_vector(DATA_WIDTH-1 downto 0);
+        begin
+            for i in 0 to ROM_SIZE -1 loop
+                readline(romFile,romFileLine);
+                read(romFileLine,temp);
+                rom(i):= to_stdlogicvector(temp);
+            end loop;
+         return rom;
+    end function;
+--Signals
+    signal ROM           : memory_array(0 to ROM_SIZE-1)(DATA_WIDTH-1 downto 0) := init_ROM("data.txt");
     signal cnt           : unsigned(log2(natural(ROM_SIZE))-1 downto 0);
     signal last_addr     : unsigned(log2(natural(ROM_SIZE))-1 downto 0);
     signal offset_reg    : std_logic_vector(log2(natural(ROM_SIZE))-1 downto 0);
