@@ -38,7 +38,7 @@ entity generic_ROM is
         DATA_WIDTH: integer := 16;
         ROM_SIZE  : integer := 16;
         ROM_FILE : string   := "data.txt"; -- give the complete path, read REMIND down below;
-        USE_OFFSET: string  := "no" --or yes
+        USE_OFFSET: string  := "yes" --or yes
       );
 --REMIND : if the file.txt isn't in the same directory of the project and if you don't give the complete path,
 --          is it possible to have scope issues and it won't be possible to read the file
@@ -55,14 +55,14 @@ end generic_ROM;
 architecture Behavioral of generic_ROM is
 --Function to read a file and fill the ROM
     impure function init_ROM(init_File: string) return memory_array is
-            file romFile         : text open read_mode is init_FILE;
-            variable romFileLine : line;
-            variable rom         : memory_array(0 to ROM_SIZE-1)(DATA_WIDTH-1 downto 0);
-            variable temp        : bit_vector(DATA_WIDTH-1 downto 0);
+            file     rom_File     : text open read_mode is init_FILE;
+            variable file_Line    : line;
+            variable rom          : memory_array(0 to ROM_SIZE-1)(DATA_WIDTH-1 downto 0);
+            variable temp         : bit_vector(DATA_WIDTH-1 downto 0);
         begin
             for i in 0 to ROM_SIZE -1 loop
-                readline(romFile,romFileLine);
-                read(romFileLine,temp);
+                readline(rom_File,file_Line);
+                read(file_Line,temp);
                 rom(i):= to_stdlogicvector(temp);
             end loop;
          return rom;
@@ -140,8 +140,10 @@ WithOffset_GEN: if USE_OFFSET = "yes" generate
     end process;
     data_out_proc:process(clk)
         begin
-            if enable = '1' and load = '0' then
-                data_out <= rom(TO_INTEGER(cnt));
+            if rising_edge (clk) then 
+                if enable = '1' and load = '0' then
+                    data_out <= rom(TO_INTEGER(cnt));
+                end if;
             end if;
         end process;
 end generate;
