@@ -33,13 +33,18 @@ use IEEE.NUMERIC_STD.ALL;
 package my_pkg is 
 --  CUSTOM FUNCTIONS
     function log2(i:natural) return natural;    --math function to compute ceil log2
-    function arith_shift_right (
+    function arith_shift_right (                --function to compute arithmetic right shift
         to_shift : std_logic_vector;
         shift_val: std_logic_vector
     ) return std_logic_vector;
+    function mux2(                              -- easy way to create a 2 input mux
+        in1: std_logic_vector;
+        in2: std_logic_vector;
+        sel: std_logic
+    )return std_logic_vector;
 --  CUSTOM TYPES    
     --  "Memory array" : used to declare memories
-    type memory_array is array (natural range <>) of std_logic_vector ;   
+    type memory_array is array (natural range <>) of std_logic_vector;   
 end package ;
 
 package body my_pkg is
@@ -73,6 +78,17 @@ package body my_pkg is
     end function;
 ----------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------
-
+-- MUX2
+    function mux2 (
+        in1: std_logic_vector;
+        in2: std_logic_vector;
+        sel: std_logic   
+    ) return std_logic_vector is
+    begin
+        case sel is
+            when '1'    => return(in1);
+            when others => return(in2);
+        end case;
+    end function;
     
 end package body;
